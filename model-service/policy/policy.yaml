@@ -1,0 +1,53 @@
+capabilities:
+  - search_resources
+  - eligibility_triage
+  - create_referral
+  - create_reminder
+  - submit_intake
+  - knowledge_lookup
+  - crisis_help
+restrictions:
+  - no_legal_advice
+  - no_medical_advice
+  - no_financial_advice
+  - no_unnecessary_pii
+  - no_autonomous_commitments
+safety:
+  moderation: on
+  crisis_routing: on
+  escalation_keywords: ["suicide", "harm", "kill", "abuse", "overdose"]
+privacy:
+  consent_required: ["submit_intake", "create_referral", "create_reminder"]
+  pii_fields: ["full_name", "dob", "ssn_last4", "phone", "email", "address"]
+  storage:
+    encrypt_at_rest: true
+    redact_in_logs: true
+tools:
+  SearchResources:
+    input_schema: { location: string, category: string, keywords?: string[] }
+    requires_consent: false
+  ScreenEligibility:
+    input_schema: { programId: string, answers: object }
+    requires_consent: false
+  CreateReferral:
+    input_schema: { resourceId: string, contact: object, consent: boolean }
+    requires_consent: true
+  CreateReminder:
+    input_schema: { channel: string, when: string, message: string, consent: boolean }
+    requires_consent: true
+  SubmitIntake:
+    input_schema: { fields: object, consent: boolean }
+    requires_consent: true
+  CrisisHelp:
+    input_schema: { topic: string, location?: string }
+    requires_consent: false
+  KnowledgeLookup:
+    input_schema: { query: string }
+    requires_consent: false
+rate_limits:
+  per_user_per_minute: 20
+  per_ip_per_minute: 60
+logging:
+  audit_sensitive_tools: true
+  redact_fields: ["ssn_last4", "dob", "address"]
+

@@ -1,0 +1,20 @@
+version: "3.8"
+services:
+  reentry-mongo:
+    image: mongo:7
+    container_name: reentry-mongo
+    ports: [ "27017:27017" ]
+    volumes:
+      - mongo_data:/data/db
+  mongo-express:
+    image: mongo-express:1.0.2-20
+    container_name: reentry-mongo-express
+    depends_on: [ reentry-mongo ]
+    environment:
+      ME_CONFIG_MONGODB_SERVER: reentry-mongo
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: admin
+    ports: [ "8081:8081" ]
+volumes:
+  mongo_data:
+
